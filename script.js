@@ -11,10 +11,10 @@
   /* ---------- DATA SISWA (untuk login simulasi) ---------- */
   var DUMMY_STUDENT = {
     nis:      '2024001',
-    email:    'andini@smkpn.sch.id',
+    email:    'Nizam@smkpn.sch.id',
     password: 'pelita123',
-    name:     'Andini Pratiwi',
-    class:    'XII RPL 1'
+    name:     'Nizam',
+    class:    'XI RPL 2'
   };
 
   /* ---------- DATA REKAP ABSENSI (dummy awal 7 siswa) ---------- */
