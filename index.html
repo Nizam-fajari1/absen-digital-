@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Absensi Siswa — SMK Plus Pelita Nusantara</title>
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- ============ HEADER / BRANDING ============ -->
+  <header class="app-header">
+    <div class="container header-inner">
+      <div class="brand">
+        <div class="logo" aria-hidden="true">PN</div>
+        <div class="brand-text">
+          <span class="school-name">SMK PLUS PELITA NUSANTARA</span>
+          <span class="school-tag">Sistem Absensi Siswa</span>
+        </div>
+      </div>
+
+      <!-- Tab navigasi antar halaman -->
+      <nav class="nav-tabs" aria-label="Navigasi halaman">
+        <button class="nav-tab active" data-view="absen" type="button">Form Absen</button>
+        <button class="nav-tab" data-view="recap" type="button">Daftar Absen Hari Ini</button>
+      </nav>
+
+      <div class="header-meta">
+        <span class="dot" aria-hidden="true"></span>
+        <span id="header-time">--:--</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- ============ MAIN ============ -->
+  <main class="app-main">
+    <div class="container">
+
+      <!-- ===== VIEW 1: LOGIN ===== -->
+      <section id="view-login" class="view active" aria-label="Halaman Login">
+        <div class="card login-card">
+          <div class="card-head">
+            <h1 class="card-title">Masuk ke Akun</h1>
+            <p class="card-subtitle">Gunakan NIS atau email sekolah untuk melanjutkan absensi.</p>
+          </div>
+
+          <form id="login-form" class="form" novalidate>
+            <div class="field">
+              <label for="nis">NIS / Email</label>
+              <input id="nis" name="nis" type="text"
+                     placeholder="cth: 2024001 atau nama@smkpn.sch.id"
+                     autocomplete="username" required />
+              <small class="field-hint">Nomor Induk Siswa atau email yang terdaftar.</small>
+            </div>
+
+            <div class="field">
+              <label for="password">Password</label>
+              <input id="password" name="password" type="password"
+                     placeholder="••••••••" autocomplete="current-password" required />
+            </div>
+
+            <div class="form-actions">
+              <button type="submit" class="btn btn-primary btn-block" id="btn-login">Masuk</button>
+            </div>
+
+            <p class="form-foot">Lupa password? Hubungi wali kelas Anda.</p>
+            <p class="form-foot" style="margin-top:-2px;">Demo: <strong>2024001</strong> / <strong>pelita123</strong></p>
+          </form>
+        </div>
+      </section>
+
+      <!-- ===== VIEW 2: SCAN MUKA ===== -->
+      <section id="view-scan" class="view" aria-label="Pemindaian Wajah">
+        <div class="card scan-card">
+          <div class="card-head">
+            <h1 class="card-title">Pemindaian Wajah</h1>
+            <p class="card-subtitle">Posisikan wajah di dalam bingkai, lalu tekan tombol untuk memindai.</p>
+          </div>
+
+          <div class="scan-stage">
+            <div class="scan-frame" id="scan-frame">
+              <video id="camera" class="camera" playsinline autoplay muted></video>
+
+              <div class="scan-placeholder" id="scan-placeholder">
+  <div class="face-svg" aria-hidden="true">
+    <svg viewBox="0 0 120 140" width="90" height="105">
+      <circle cx="60" cy="45" r="35" fill="#64748b" />
+      <path d="M 15 135 Q 15 85 60 85 Q 105 85 105 135 Z" fill="#64748b" />
+    </svg>
+  </div>
+  <span class="placeholder-text" id="camera-status">Kamera belum aktif</span>
+  <span class="placeholder-sub">Mode simulasi — tetap tekan tombol scan</span>
+</div>
+                <span class="placeholder-text">Kamera belum aktif</span>
+              </div>
+
+              <span class="corner tl"></span>
+              <span class="corner tr"></span>
+              <span class="corner bl"></span>
+              <span class="corner br"></span>
+
+              <div class="scan-line" id="scan-line" aria-hidden="true"></div>
+
+              <div class="scan-overlay" id="scan-overlay" >
+                <div class="scan-overlay-inner">
+                  <span class="scan-overlay-spinner"></span>
+                  <span class="scan-overlay-text" id="scan-overlay-text">Sedang mencocokkan wajah…</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="scan-actions">
+  <button type="button" class="btn btn-secondary" id="btn-back">
+    <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+         stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+      <line x1="19" y1="12" x2="5" y2="12"></line>
+      <polyline points="12 19 5 12 12 5"></polyline>
+    </svg>
+    Kembali
+  </button>
+  <button type="button" class="btn btn-primary" id="btn-scan">
+    <svg viewBox="0 0 24 24" width="18" height="18" fill="none"
+         stroke="currentColor" stroke-width="2"
+         stroke-linecap="round" stroke-linejoin="round">
+      <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+      <circle cx="12" cy="13" r="4"></circle>
+    </svg>
+    Ambil Foto / Scan Muka
+  </button>
+</div>
+      </section>
+
+      <!-- ===== VIEW 3: ABSEN BERHASIL ===== -->
+      <section id="view-success" class="view" aria-label="Absensi Berhasil">
+        <div class="card success-card">
+          <div class="success-head">
+            <div class="success-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24" width="34" height="34" fill="none"
+                   stroke="currentColor" stroke-width="2.5"
+                   stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <h1 class="card-title">Absensi Berhasil</h1>
+            <p class="card-subtitle">Data kehadiran Anda telah tercatat pada rekap hari ini.</p>
+          </div>
+
+          <div class="receipt">
+            <div class="receipt-row">
+              <span class="receipt-label">Nama Siswa</span>
+              <span class="receipt-value" id="res-name">—</span>
+            </div>
+            <div class="receipt-row">
+              <span class="receipt-label">Kelas</span>
+              <span class="receipt-value" id="res-class">—</span>
+            </div>
+            <div class="receipt-row">
+              <span class="receipt-label">Status</span>
+              <span class="receipt-value">
+                <span class="badge badge-success" id="res-status">Hadir</span>
+              </span>
+            </div>
+            <div class="receipt-row">
+              <span class="receipt-label">Waktu Absen</span>
+              <span class="receipt-value" id="res-time">—</span>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-primary btn-block" id="btn-done">Selesai / Kembali ke Login</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ===== VIEW 4: DAFTAR REKAP ABSEN ===== -->
+      <section id="view-recap" class="view" aria-label="Daftar Absen Hari Ini">
+  <div class="card recap-card">
+
+    <!-- Header -->
+    <div class="recap-head">
+      <div class="recap-head-info">
+        <h1 class="card-title">Daftar Absen Hari Ini</h1>
+        <p class="card-subtitle" id="recap-date">—</p>
+      </div>
+      <button type="button" class="btn btn-secondary btn-sm" id="btn-recap-refresh">
+        <svg viewBox="0 0 24 24" width="14" height="14" fill="none"
+             stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round"
+             style="margin-right:6px;">
+          <polyline points="23 4 23 10 17 10"></polyline>
+          <polyline points="1 20 1 14 7 14"></polyline>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+        </svg>
+        Muat Ulang
+      </button>
+    </div>
+
+    <!-- Stat cards dengan ikon -->
+    <div class="stat-grid">
+      <div class="stat-card">
+        <div class="stat-card-top">
+          <span class="stat-label">Total Hadir</span>
+          <span class="stat-icon stat-icon-blue">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+                 stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </span>
+        </div>
+        <span class="stat-value" id="stat-total">0</span>
+      </div>
+
+      <div class="stat-card stat-on-time">
+        <div class="stat-card-top">
+          <span class="stat-label">Tepat Waktu</span>
+          <span class="stat-icon stat-icon-green">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+                 stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+              <polyline points="22 4 12 14.01 9 11.01"></polyline>
+            </svg>
+          </span>
+        </div>
+        <span class="stat-value" id="stat-on-time">0</span>
+      </div>
+
+      <div class="stat-card stat-late">
+        <div class="stat-card-top">
+          <span class="stat-label">Terlambat</span>
+          <span class="stat-icon stat-icon-amber">
+            <svg viewBox="0 0 24 24" width="16" height="16" fill="none"
+                 stroke="currentColor" stroke-width="2"
+                 stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </span>
+        </div>
+        <span class="stat-value" id="stat-late">0</span>
+      </div>
+    </div>
+
+    <!-- Filter -->
+    <div class="filter-bar">
+      <div class="filter-field filter-grow">
+        <label for="search-input">Cari Nama / NIS</label>
+        <div class="input-wrap">
+          <svg class="input-icon" viewBox="0 0 24 24" width="15" height="15" fill="none"
+               stroke="currentColor" stroke-width="2"
+               stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+          </svg>
+          <input type="text" id="search-input" placeholder="Ketik nama atau NIS siswa…" autocomplete="off" />
+        </div>
+      </div>
+      <div class="filter-field">
+        <label for="class-filter">Pilih Kelas</label>
+        <select id="class-filter">
+          <option value="">Semua Kelas</option>
+        </select>
+      </div>
+    </div>
+
+    <!-- Tabel -->
+    <div class="table-wrap">
+      <table class="attendance-table">
+        <thead>
+          <tr>
+            <th class="th-no">No</th>
+            <th class="th-photo">Foto</th>
+            <th class="th-name">Nama Siswa</th>
+            <th class="th-nis">NIS</th>
+            <th class="th-class">Kelas</th>
+            <th class="th-time">Jam Absen</th>
+            <th class="th-status">Status</th>
+          </tr>
+        </thead>
+        <tbody id="attendance-tbody"></tbody>
+      </table>
+    </div>
+
+    <p class="recap-foot">Tabel otomatis diperbarui setiap kali siswa menyelesaikan absensi.</p>
+  </div>
+</section>
+    </div>
+  </main>
+
+  <!-- ============ FOOTER ============ -->
+  <footer class="app-footer">
+    <div class="container">
+      <span>© 2025 SMK Plus Pelita Nusantara · Sistem Absensi Digital</span>
+    </div>
+  </footer>
+
+  <!-- Toast notifikasi kecil -->
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="script.js"></script>
+</body>
+</html>
